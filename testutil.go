@@ -8,7 +8,6 @@ import (
 	"testing"
 )
 
-// assert fails the test if the condition is false.
 func Assert(tb testing.TB, condition bool, msg string, v ...interface{}) {
 	if !condition {
 		_, file, line, _ := runtime.Caller(1)
@@ -22,6 +21,15 @@ func Ok(tb testing.TB, err error) {
 	if err != nil {
 		_, file, line, _ := runtime.Caller(1)
 		fmt.Printf("\033[31m%s:%d: unexpected error: %s\033[39m\n\n", filepath.Base(file), line, err.Error())
+		tb.FailNow()
+	}
+}
+
+// NotOk fails the test if an err is nil.
+func NotOk(tb testing.TB, err error) {
+	if err == nil {
+		_, file, line, _ := runtime.Caller(1)
+		fmt.Printf("\033[31m%s:%d: expected error, got none\033[39m\n\n", filepath.Base(file), line)
 		tb.FailNow()
 	}
 }
